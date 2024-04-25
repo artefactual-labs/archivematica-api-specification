@@ -1,0 +1,17 @@
+{
+  "name": "archivematica",
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "_tsp": "npx tsp",
+    "compile": "npm run _tsp -- compile .",
+    "watch": "npm run _tsp -- compile . --watch"
+  },
+  "dependencies": {
+    "@typespec/compiler": "latest",
+    "@typespec/http": "latest",
+    "@typespec/rest": "latest",
+    "@typespec/openapi3": "latest"
+  },
+  "private": true
+}
