@@ -1,7 +1,88 @@
 openapi: 3.0.0
 info:
-  title: (title)
+  title: Archivematica
   version: 0.0.0
 tags: []
-paths: {}
-components: {}
+paths:
+  /api/v2beta/package:
+    post:
+      operationId: Packages_create
+      description: Starts a new transfer.
+      parameters: []
+      responses:
+        '201':
+          description: The request has succeeded and a new resource has been created as a result.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreatePackageResponse'
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreatePackageRequest'
+security:
+  - ApiKeyAuth: []
+components:
+  schemas:
+    CreatePackageRequest:
+      type: object
+      properties:
+        access_system_id:
+          type: string
+        accession:
+          type: string
+        auto_approve:
+          type: boolean
+        name:
+          type: string
+        path:
+          type: string
+        processing_config:
+          type: string
+        type:
+          $ref: '#/components/schemas/TransferType'
+    CreatePackageResponse:
+      type: object
+      required:
+        - id
+      properties:
+        id:
+          $ref: '#/components/schemas/uuid'
+    Error:
+      type: object
+      required:
+        - error
+        - message
+      properties:
+        error:
+          type: boolean
+          default: true
+        message:
+          type: string
+    TransferType:
+      type: string
+      enum:
+        - standard
+        - zipfile
+        - unzipped bag
+        - zipped bag
+        - dspace
+        - maildir
+        - TRIM
+        - dataverse
+    uuid:
+      type: string
+      format: 'UUIDv4, e.g.: "e3bae040-7682-4457-aef8-20a419aed0bd".'
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: ApiKey
