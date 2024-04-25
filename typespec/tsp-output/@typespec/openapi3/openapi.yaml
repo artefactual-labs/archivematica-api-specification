@@ -34,17 +34,20 @@ components:
   schemas:
     CreatePackageRequest:
       type: object
+      required:
+        - name
+        - path
       properties:
+        name:
+          type: string
+        path:
+          type: string
         access_system_id:
           type: string
         accession:
           type: string
         auto_approve:
           type: boolean
-        name:
-          type: string
-        path:
-          type: string
         processing_config:
           type: string
         type:

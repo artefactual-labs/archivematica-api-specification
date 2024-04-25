@@ -43,11 +43,11 @@ enum TransferType {
 }
 
 model CreatePackageRequest {
+    name: string;
+    path: string;
     access_system_id?: string;
     accession?: string;
     auto_approve?: boolean;
-    name?: string;
-    path?: string;
     processing_config?: string;
     type?: TransferType;
 }
