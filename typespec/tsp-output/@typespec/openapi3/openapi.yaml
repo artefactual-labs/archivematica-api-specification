@@ -15,6 +15,24 @@ paths:
           description: Package ID
           schema:
             $ref: '#/components/schemas/uuid'
+        - name: microservice
+          in: query
+          required: false
+          description: Name of the microservice the jobs belong to.
+          schema:
+            type: string
+        - name: link_uuid
+          in: query
+          required: true
+          description: UUID of the job chain link.
+          schema:
+            $ref: '#/components/schemas/uuid'
+        - name: name
+          in: query
+          required: false
+          description: Name of the job.
+          schema:
+            type: string
       responses:
         '200':
           description: The request has succeeded.
@@ -40,25 +58,6 @@ paths:
                   message:
                     type: string
                 description: ''
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                microservice:
-                  type: string
-                  description: Name of the microservice the jobs belong to.
-                link_uuid:
-                  allOf:
-                    - $ref: '#/components/schemas/uuid'
-                  description: UUID of the job chain link.
-                name:
-                  type: string
-                  description: Name of the job.
-              required:
-                - link_uuid
   /api/v2beta/package:
     post:
       operationId: Packages_create

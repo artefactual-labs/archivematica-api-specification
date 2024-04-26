@@ -66,12 +66,15 @@ namespace Service {
                 id: uuid,
 
                 @doc("Name of the microservice the jobs belong to.")
+                @query
                 microservice?: string,
 
                 @doc("UUID of the job chain link.")
+                @query
                 link_uuid: uuid,
 
                 @doc("Name of the job.")
+                @query
                 name?: string,
             ): {
                 @statusCode _: 200;
