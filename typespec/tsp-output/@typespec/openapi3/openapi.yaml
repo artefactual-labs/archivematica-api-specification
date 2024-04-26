@@ -4,6 +4,61 @@ info:
   version: 0.0.0
 tags: []
 paths:
+  /api/v2beta/jobs/{id}:
+    get:
+      operationId: Jobs_list
+      description: Return a list of jobs for the given package.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Package ID
+          schema:
+            $ref: '#/components/schemas/uuid'
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/V2.Jobs.Job'
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - error
+                  - message
+                properties:
+                  error:
+                    type: boolean
+                    default: true
+                  message:
+                    type: string
+                description: ''
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                microservice:
+                  type: string
+                  description: Name of the microservice the jobs belong to.
+                link_uuid:
+                  allOf:
+                    - $ref: '#/components/schemas/uuid'
+                  description: UUID of the job chain link.
+                name:
+                  type: string
+                  description: Name of the job.
+              required:
+                - link_uuid
   /api/v2beta/package:
     post:
       operationId: Packages_create
@@ -15,24 +70,157 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CreatePackageResponse'
+                $ref: '#/components/schemas/V2.Packages.CreatePackageResponse'
         '400':
           description: The server could not understand the request due to invalid syntax.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Error'
+                type: object
+                required:
+                  - error
+                  - message
+                properties:
+                  error:
+                    type: boolean
+                    default: true
+                  message:
+                    type: string
+                description: ''
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CreatePackageRequest'
+              $ref: '#/components/schemas/V2.Packages.CreatePackageRequest'
+  /api/v2beta/task/{id}:
+    get:
+      operationId: Tasks_read
+      description: Return information about a task.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/V2.Tasks.Task'
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - error
+                  - message
+                properties:
+                  error:
+                    type: boolean
+                    default: true
+                  message:
+                    type: string
+                description: ''
+  /api/v2beta/validate/{validator}:
+    post:
+      operationId: Validate_create
+      description: |-
+        Validate CSVs against embedded sets of rules.
+
+        The status value may be one of:
+        - `ok`: the submitted document is valid.
+        - `bad request`: the submitted document is invalid.
+      parameters:
+        - name: validator
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/V2.Validate.Validator'
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/V2.Validate.ValidDocumentResponse'
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                anyOf:
+                  - $ref: '#/components/schemas/V2.Validate.InvalidDocumentResponse'
+                  - $ref: '#/components/schemas/Error'
+      requestBody:
+        required: true
+        content:
+          text/csv; charset=utf-8:
+            schema:
+              type: string
+              format: binary
 security:
   - ApiKeyAuth: []
 components:
   schemas:
-    CreatePackageRequest:
+    Error:
+      type: object
+      required:
+        - error
+        - message
+      properties:
+        error:
+          type: boolean
+          default: true
+        message:
+          type: string
+    V2.Jobs.Job:
+      type: object
+      required:
+        - status
+        - tasks
+        - uuid
+        - link_uuid
+        - microservice
+        - name
+      properties:
+        status:
+          $ref: '#/components/schemas/V2.Jobs.JobStatus'
+        tasks:
+          type: array
+          items:
+            $ref: '#/components/schemas/V2.Jobs.Task'
+        uuid:
+          $ref: '#/components/schemas/uuid'
+        link_uuid:
+          $ref: '#/components/schemas/uuid'
+        microservice:
+          type: string
+        name:
+          type: string
+    V2.Jobs.JobStatus:
+      type: string
+      enum:
+        - UNKNOWN
+        - USER_INPUT
+        - COMPLETE
+        - PROCESSING
+        - FAILED
+    V2.Jobs.Task:
+      type: object
+      required:
+        - uuid
+        - exit_code
+      properties:
+        uuid:
+          $ref: '#/components/schemas/uuid'
+        exit_code:
+          $ref: '#/components/schemas/exitCode'
+    V2.Packages.CreatePackageRequest:
       type: object
       required:
         - name
@@ -51,26 +239,15 @@ components:
         processing_config:
           type: string
         type:
-          $ref: '#/components/schemas/TransferType'
-    CreatePackageResponse:
+          $ref: '#/components/schemas/V2.Packages.TransferType'
+    V2.Packages.CreatePackageResponse:
       type: object
       required:
         - id
       properties:
         id:
           $ref: '#/components/schemas/uuid'
-    Error:
-      type: object
-      required:
-        - error
-        - message
-      properties:
-        error:
-          type: boolean
-          default: true
-        message:
-          type: string
-    TransferType:
+    V2.Packages.TransferType:
       type: string
       enum:
         - standard
@@ -81,6 +258,68 @@ components:
         - maildir
         - TRIM
         - dataverse
+    V2.Tasks.Task:
+      type: object
+      required:
+        - uuid
+        - file_name
+        - exit_code
+        - time_created
+        - time_ended
+        - file_uuid
+        - duration
+        - time_started
+      properties:
+        uuid:
+          $ref: '#/components/schemas/uuid'
+        file_name:
+          type: string
+        exit_code:
+          $ref: '#/components/schemas/exitCode'
+        time_created:
+          $ref: '#/components/schemas/timestamp'
+        time_ended:
+          $ref: '#/components/schemas/timestamp'
+        file_uuid:
+          $ref: '#/components/schemas/uuid'
+        duration:
+          type: string
+          enum:
+            - seconds
+        time_started:
+          $ref: '#/components/schemas/timestamp'
+    V2.Validate.InvalidDocumentResponse:
+      type: object
+      required:
+        - valid
+        - reason
+      properties:
+        valid:
+          type: boolean
+          default: false
+        reason:
+          type: string
+          minLength: 1
+    V2.Validate.ValidDocumentResponse:
+      type: object
+      required:
+        - valid
+      properties:
+        valid:
+          type: boolean
+          default: true
+    V2.Validate.Validator:
+      type: string
+      enum:
+        - avalon
+        - rights
+    exitCode:
+      type: integer
+      format: uint8
+      description: 'POSIX-compatible exit code: 0 for success and any number from 1 to 255 for anything else.'
+    timestamp:
+      type: string
+      description: 'E.g.: "2020-01-17T00:44:37".'
     uuid:
       type: string
       format: 'UUIDv4, e.g.: "e3bae040-7682-4457-aef8-20a419aed0bd".'
