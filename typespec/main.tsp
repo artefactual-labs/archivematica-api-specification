@@ -57,7 +57,7 @@ namespace Service {
     }
 
     @route("/v2beta")
-    namespace V2 {
+    namespace V2Beta {
         @route("/package")
         namespace Packages {
             @doc("Starts a new transfer.")

@@ -147,7 +147,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/V2.Jobs.Job'
+                  $ref: '#/components/schemas/V2Beta.Jobs.Job'
         '400':
           description: The server could not understand the request due to invalid syntax.
           content:
@@ -175,7 +175,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/V2.Packages.CreatePackageResponse'
+                $ref: '#/components/schemas/V2Beta.Packages.CreatePackageResponse'
         '400':
           description: The server could not understand the request due to invalid syntax.
           content:
@@ -197,7 +197,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/V2.Packages.CreatePackageRequest'
+              $ref: '#/components/schemas/V2Beta.Packages.CreatePackageRequest'
   /api/v2beta/task/{id}:
     get:
       operationId: Tasks_read
@@ -214,7 +214,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/V2.Tasks.Task'
+                $ref: '#/components/schemas/V2Beta.Tasks.Task'
         '400':
           description: The server could not understand the request due to invalid syntax.
           content:
@@ -245,21 +245,21 @@ paths:
           in: path
           required: true
           schema:
-            $ref: '#/components/schemas/V2.Validate.Validator'
+            $ref: '#/components/schemas/V2Beta.Validate.Validator'
       responses:
         '200':
           description: The request has succeeded.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/V2.Validate.ValidDocumentResponse'
+                $ref: '#/components/schemas/V2Beta.Validate.ValidDocumentResponse'
         '400':
           description: The server could not understand the request due to invalid syntax.
           content:
             application/json:
               schema:
                 anyOf:
-                  - $ref: '#/components/schemas/V2.Validate.InvalidDocumentResponse'
+                  - $ref: '#/components/schemas/V2Beta.Validate.InvalidDocumentResponse'
                   - $ref: '#/components/schemas/Error'
       requestBody:
         required: true
@@ -291,7 +291,7 @@ components:
         success:
           type: boolean
           default: true
-    V2.Jobs.Job:
+    V2Beta.Jobs.Job:
       type: object
       required:
         - status
@@ -302,11 +302,11 @@ components:
         - name
       properties:
         status:
-          $ref: '#/components/schemas/V2.Jobs.JobStatus'
+          $ref: '#/components/schemas/V2Beta.Jobs.JobStatus'
         tasks:
           type: array
           items:
-            $ref: '#/components/schemas/V2.Jobs.Task'
+            $ref: '#/components/schemas/V2Beta.Jobs.Task'
         uuid:
           $ref: '#/components/schemas/uuid'
         link_uuid:
@@ -315,7 +315,7 @@ components:
           type: string
         name:
           type: string
-    V2.Jobs.JobStatus:
+    V2Beta.Jobs.JobStatus:
       type: string
       enum:
         - UNKNOWN
@@ -323,7 +323,7 @@ components:
         - COMPLETE
         - PROCESSING
         - FAILED
-    V2.Jobs.Task:
+    V2Beta.Jobs.Task:
       type: object
       required:
         - uuid
@@ -333,7 +333,7 @@ components:
           $ref: '#/components/schemas/uuid'
         exit_code:
           $ref: '#/components/schemas/exitCode'
-    V2.Packages.CreatePackageRequest:
+    V2Beta.Packages.CreatePackageRequest:
       type: object
       required:
         - name
@@ -352,15 +352,15 @@ components:
         processing_config:
           type: string
         type:
-          $ref: '#/components/schemas/V2.Packages.TransferType'
-    V2.Packages.CreatePackageResponse:
+          $ref: '#/components/schemas/V2Beta.Packages.TransferType'
+    V2Beta.Packages.CreatePackageResponse:
       type: object
       required:
         - id
       properties:
         id:
           $ref: '#/components/schemas/uuid'
-    V2.Packages.TransferType:
+    V2Beta.Packages.TransferType:
       type: string
       enum:
         - standard
@@ -371,7 +371,7 @@ components:
         - maildir
         - TRIM
         - dataverse
-    V2.Tasks.Task:
+    V2Beta.Tasks.Task:
       type: object
       required:
         - uuid
@@ -401,7 +401,7 @@ components:
             - seconds
         time_started:
           $ref: '#/components/schemas/timestamp'
-    V2.Validate.InvalidDocumentResponse:
+    V2Beta.Validate.InvalidDocumentResponse:
       type: object
       required:
         - valid
@@ -413,7 +413,7 @@ components:
         reason:
           type: string
           minLength: 1
-    V2.Validate.ValidDocumentResponse:
+    V2Beta.Validate.ValidDocumentResponse:
       type: object
       required:
         - valid
@@ -421,7 +421,7 @@ components:
         valid:
           type: boolean
           default: true
-    V2.Validate.Validator:
+    V2Beta.Validate.Validator:
       type: string
       enum:
         - avalon
