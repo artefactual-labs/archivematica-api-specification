@@ -15,6 +15,40 @@ using TypeSpec.Rest;
 namespace Service {
     @route("/")
     namespace V1 {
+        @route("/transfer")
+        namespace Transfer {
+
+        }
+
+        @route("/ingest")
+        namespace Ingest {
+
+        }
+
+        @route("/filesystem")
+        namespace Filesystem {
+
+        }
+
+        @route("/administration")
+        namespace Administration {
+            @doc("List all levels of description configured.")
+            @route("/dips/atom/levels/")
+            @get
+            op listLevelsOfDescription(): LevelsOfDescriptionResponse;
+
+            @doc("Fetches all levels of description from an AtoM datatabase, replacing any previously existing.")
+            @route("/dips/atom/fetch_levels/")
+            @get
+            op fetchLevelsOfDescription(
+            ): LevelsOfDescriptionResponse | SuccessError<500>;
+
+            model LevelsOfDescriptionResponse is Response<200> {
+                @body
+                body: Record<uuid>[];
+            }
+        }
+
         @route("/processing-configuration")
         namespace ProcessingConfiguration {
             @doc("Lists known processing configurations.")

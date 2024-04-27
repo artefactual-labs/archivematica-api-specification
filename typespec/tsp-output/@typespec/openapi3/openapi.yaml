@@ -4,6 +4,54 @@ info:
   version: 0.0.0
 tags: []
 paths:
+  /api/administration/dips/atom/fetch_levels:
+    get:
+      operationId: Administration_fetchLevelsOfDescription
+      description: Fetches all levels of description from an AtoM datatabase, replacing any previously existing.
+      parameters: []
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  additionalProperties:
+                    $ref: '#/components/schemas/uuid'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - success
+                  - error
+                properties:
+                  success:
+                    type: boolean
+                    default: false
+                  error:
+                    type: string
+                description: ''
+  /api/administration/dips/atom/levels:
+    get:
+      operationId: Administration_listLevelsOfDescription
+      description: List all levels of description configured.
+      parameters: []
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  additionalProperties:
+                    $ref: '#/components/schemas/uuid'
   /api/processing-configuration:
     get:
       operationId: ProcessingConfiguration_list
