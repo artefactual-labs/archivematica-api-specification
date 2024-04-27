@@ -27,26 +27,53 @@ namespace Service {
 
         @route("/filesystem")
         namespace Filesystem {
+            @doc("List all levels of description configured.")
+            @route("/administration/dips/atom/levels/")
+            @get
+            op listLevelsOfDescription(): LevelsOfDescriptionResponse;
 
+            @doc("Read metadata for a path (currently only level of description).")
+            @route("/metadata")
+            @get
+            op readMetadata(
+                @query
+                path: string,
+            ): {
+                @statusCode _: 200;
+                level_of_description: string;
+            } | {
+                @statusCode _: 404;
+            };
+
+            @doc("Update metadata for a path (currently only level of descrption).")
+            @route("/metadata")
+            @post
+            op updateMetadata(
+                @header
+                contentType: "application/x-www-form-urlencoded",
+
+                path: string,
+                level_of_description: string,
+            ): {
+                @statusCode _: 201;
+                @body success: Success;
+            } | {
+                @statusCode _: 404;
+            };
         }
 
         @route("/administration")
         namespace Administration {
-            @doc("List all levels of description configured.")
-            @route("/dips/atom/levels/")
-            @get
-            op listLevelsOfDescription(): LevelsOfDescriptionResponse;
-
             @doc("Fetches all levels of description from an AtoM datatabase, replacing any previously existing.")
             @route("/dips/atom/fetch_levels/")
             @get
             op fetchLevelsOfDescription(
             ): LevelsOfDescriptionResponse | SuccessError<500>;
+        }
 
-            model LevelsOfDescriptionResponse is Response<200> {
-                @body
-                body: Record<uuid>[];
-            }
+        model LevelsOfDescriptionResponse is Response<200> {
+            @body
+            body: Record<uuid>[];
         }
 
         @route("/processing-configuration")
