@@ -20,3 +20,15 @@ model GenericError<Status> is Response<Status> {
     error: boolean = true;
     message: string;
 }
+
+@error
+model SuccessError<Status> is Response<Status> {
+    success: boolean = false;
+    error: string;
+}
+
+model Success {
+    success: boolean = true;
+}
+
+alias SuccessResponse = Success | SuccessError<404>;

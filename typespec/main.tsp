@@ -15,7 +15,45 @@ using TypeSpec.Rest;
 namespace Service {
     @route("/")
     namespace V1 {
+        @route("/processing-configuration")
+        namespace ProcessingConfiguration {
+            @doc("Lists known processing configurations.")
+            @get
+            op list(): {
+                @statusCode _: 200;
 
+                @doc("List of config names.")
+                @body
+                body: string[];
+            };
+
+            @doc("Returns the processing configuration with the given name.")
+            @route("/{name}")
+            @get
+            op read(
+                @header accept: "*/*" | "application/xml" | "text/xml",
+                @path name: string,
+            ):
+                | {
+                      @statusCode _: 200;
+                      ...ProcessingConfiguration;
+                  }
+                | {
+                      @statusCode _: 415;
+                  }
+                | SuccessError<404>
+                | SuccessError<500>;
+
+            @doc("Deletes the processing configuration with the given name.")
+            @route("/{name}")
+            @delete
+            op delete(@path name: string): SuccessResponse;
+
+            model ProcessingConfiguration {
+                @header contentType: "text/xml";
+                @body body: string;
+            }
+        }
     }
 
     @route("/v2beta")

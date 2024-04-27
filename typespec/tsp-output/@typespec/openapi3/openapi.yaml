@@ -4,6 +4,112 @@ info:
   version: 0.0.0
 tags: []
 paths:
+  /api/processing-configuration:
+    get:
+      operationId: ProcessingConfiguration_list
+      description: Lists known processing configurations.
+      parameters: []
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+  /api/processing-configuration/{name}:
+    get:
+      operationId: ProcessingConfiguration_read
+      description: Returns the processing configuration with the given name.
+      parameters:
+        - name: accept
+          in: header
+          required: true
+          schema:
+            type: string
+            enum:
+              - '*/*'
+              - application/xml
+              - text/xml
+        - name: name
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            text/xml:
+              schema:
+                type: string
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - success
+                  - error
+                properties:
+                  success:
+                    type: boolean
+                    default: false
+                  error:
+                    type: string
+                description: ''
+        '415':
+          description: Client error
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - success
+                  - error
+                properties:
+                  success:
+                    type: boolean
+                    default: false
+                  error:
+                    type: string
+                description: ''
+    delete:
+      operationId: ProcessingConfiguration_delete
+      description: Deletes the processing configuration with the given name.
+      parameters:
+        - name: name
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - success
+                  - error
+                properties:
+                  success:
+                    type: boolean
+                    default: false
+                  error:
+                    type: string
+                description: ''
   /api/v2beta/jobs/{id}:
     get:
       operationId: Jobs_list
@@ -177,6 +283,14 @@ components:
           default: true
         message:
           type: string
+    Success:
+      type: object
+      required:
+        - success
+      properties:
+        success:
+          type: boolean
+          default: true
     V2.Jobs.Job:
       type: object
       required:
