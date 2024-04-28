@@ -115,6 +115,17 @@ paths:
             application/json:
               schema:
                 type: object
+                required:
+                  - results
+                  - message
+                properties:
+                  results:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/uuid'
+                  message:
+                    type: string
+                description: ''
   /api/ingest/copy_metadata_files:
     post:
       operationId: Ingest_copyMetadataFiles
@@ -129,7 +140,7 @@ paths:
                 type: object
   /api/ingest/delete:
     delete:
-      operationId: Ingest_delete
+      operationId: Ingest_deleteAll
       description: Mark all completed SIPs as hidden.
       parameters: []
       responses:
@@ -138,7 +149,21 @@ paths:
           content:
             application/json:
               schema:
-                type: object
+                $ref: '#/components/schemas/Removed'
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+        '409':
+          description: The request conflicts with the current state of the server.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotRemoved'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotRemoved'
   /api/ingest/reingest:
     post:
       operationId: Ingest_reingest
@@ -192,9 +217,22 @@ paths:
             application/json:
               schema:
                 type: object
+                required:
+                  - results
+                  - message
+                properties:
+                  results:
+                    type: array
+                    items:
+                      type: number
+                      enum:
+                        - 200
+                  message:
+                    type: string
+                description: ''
   /api/ingest/{id}/delete:
     post:
-      operationId: Ingest_hide
+      operationId: Ingest_delete
       description: Mark a SIP as hidden and hide in the dashboard.
       parameters:
         - name: id
@@ -208,7 +246,21 @@ paths:
           content:
             application/json:
               schema:
-                type: object
+                $ref: '#/components/schemas/Removed'
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+        '409':
+          description: The request conflicts with the current state of the server.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotRemoved'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotRemoved'
   /api/processing-configuration:
     get:
       operationId: ProcessingConfiguration_list
@@ -326,7 +378,23 @@ paths:
           content:
             application/json:
               schema:
+                $ref: '#/components/schemas/V1.Transfer.ApproveTransferResponse'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
                 type: object
+                required:
+                  - error
+                  - message
+                properties:
+                  error:
+                    type: boolean
+                    default: true
+                  message:
+                    type: string
+                description: ''
       requestBody:
         required: true
         content:
@@ -336,8 +404,11 @@ paths:
               properties:
                 directory:
                   type: string
+                  description: Directory the transfer is in currently.
                 type:
-                  $ref: '#/components/schemas/TransferType'
+                  allOf:
+                    - $ref: '#/components/schemas/TransferType'
+                  description: Type of the transfer.
               required:
                 - directory
                 - type
@@ -353,9 +424,20 @@ paths:
             application/json:
               schema:
                 type: object
+                required:
+                  - results
+                  - message
+                properties:
+                  results:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/uuid'
+                  message:
+                    type: string
+                description: ''
   /api/transfer/delete:
     delete:
-      operationId: Transfer_delete
+      operationId: Transfer_deleteAll
       description: Mark all completed transfers as hidden.
       parameters: []
       responses:
@@ -364,7 +446,21 @@ paths:
           content:
             application/json:
               schema:
-                type: object
+                $ref: '#/components/schemas/Removed'
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+        '409':
+          description: The request conflicts with the current state of the server.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotRemoved'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotRemoved'
   /api/transfer/reingest:
     post:
       operationId: Transfer_reingest
@@ -376,7 +472,53 @@ paths:
           content:
             application/json:
               schema:
+                $ref: '#/components/schemas/V1.Transfer.ReingestResponse'
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
                 type: object
+                required:
+                  - error
+                  - message
+                properties:
+                  error:
+                    type: boolean
+                    default: true
+                  message:
+                    type: string
+                description: ''
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - error
+                  - message
+                properties:
+                  error:
+                    type: boolean
+                    default: true
+                  message:
+                    type: string
+                description: ''
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                uuid:
+                  $ref: '#/components/schemas/uuid'
+              required:
+                - name
+                - uuid
   /api/transfer/start_transfer:
     post:
       operationId: Transfer_start
@@ -388,7 +530,60 @@ paths:
           content:
             application/json:
               schema:
+                $ref: '#/components/schemas/V1.Transfer.StartTransferResponse'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
                 type: object
+                required:
+                  - error
+                  - message
+                properties:
+                  error:
+                    type: boolean
+                    default: true
+                  message:
+                    type: string
+                description: ''
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: Name of the transfer.
+                type:
+                  allOf:
+                    - $ref: '#/components/schemas/TransferType'
+                  description: Type of the transfer.
+                accession:
+                  type: string
+                  description: Accession number.
+                access_id:
+                  type: string
+                  description: Access system ID.
+                paths:
+                  type: array
+                  items:
+                    type: string
+                  description: List of base64-encoded <location_uuid>:<relative_path> to be copied into the new transfer. Location UUIDs should be associated with this pipeline, and relative path should be relative to the location.
+                row_ids:
+                  type: array
+                  items:
+                    type: string
+                  description: ID of the associated TransferMetadataSet for disk image ingest.
+              required:
+                - name
+                - type
+                - accession
+                - access_id
+                - paths
+                - row_ids
   /api/transfer/status/{id}:
     get:
       operationId: Transfer_read
@@ -406,6 +601,22 @@ paths:
             application/json:
               schema:
                 type: object
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - error
+                  - message
+                properties:
+                  error:
+                    type: boolean
+                    default: true
+                  message:
+                    type: string
+                description: ''
   /api/transfer/unapproved:
     get:
       operationId: Transfer_listUnapproved
@@ -418,9 +629,20 @@ paths:
             application/json:
               schema:
                 type: object
+                required:
+                  - results
+                  - message
+                properties:
+                  results:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/V1.Transfer.Unapproved'
+                  message:
+                    type: string
+                description: ''
   /api/transfer/{id}/delete:
     post:
-      operationId: Transfer_hide
+      operationId: Transfer_delete
       description: Mark a transfer as hidden and hide in the dashboard.
       parameters:
         - name: id
@@ -434,7 +656,21 @@ paths:
           content:
             application/json:
               schema:
-                type: object
+                $ref: '#/components/schemas/Removed'
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+        '409':
+          description: The request conflicts with the current state of the server.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotRemoved'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotRemoved'
   /api/v2beta/jobs/{id}:
     get:
       operationId: Jobs_list
@@ -608,6 +844,23 @@ components:
           default: true
         message:
           type: string
+    NotRemoved:
+      type: object
+      required:
+        - removed
+      properties:
+        removed:
+          type: boolean
+          default: false
+    Removed:
+      type: object
+      required:
+        - removed
+      properties:
+        removed:
+          type: boolean
+          default: true
+      description: ''
     Success:
       type: object
       required:
@@ -627,6 +880,107 @@ components:
         - maildir
         - TRIM
         - dataverse
+    UnitStatus:
+      type: string
+      enum:
+        - USER_INPUT
+        - FAILED
+        - REJECTED
+        - COMPLETE
+        - PROCESSING
+    V1.Ingest.Waiting:
+      type: object
+      required:
+        - sip_directory
+        - sip_uuid
+        - sip_name
+        - microservice
+      properties:
+        sip_directory:
+          type: string
+        sip_uuid:
+          $ref: '#/components/schemas/uuid'
+        sip_name:
+          type: string
+        microservice:
+          type: string
+    V1.Transfer.ApproveTransferResponse:
+      type: object
+      required:
+        - message
+        - uuid
+      properties:
+        message:
+          type: string
+        uuid:
+          $ref: '#/components/schemas/uuid'
+      description: ''
+    V1.Transfer.ReadResponse:
+      type: object
+      required:
+        - type
+        - directory
+        - name
+        - uuid
+        - microservice
+        - status
+      properties:
+        type:
+          type: string
+          enum:
+            - transfer
+            - SIP
+        directory:
+          type: string
+        name:
+          type: string
+        uuid:
+          $ref: '#/components/schemas/uuid'
+        microservice:
+          type: string
+        status:
+          $ref: '#/components/schemas/UnitStatus'
+        sip_uuid:
+          anyOf:
+            - $ref: '#/components/schemas/uuid'
+            - type: string
+              enum:
+                - BACKLOG
+    V1.Transfer.ReingestResponse:
+      type: object
+      required:
+        - message
+        - reingest_uuid
+      properties:
+        message:
+          type: string
+        reingest_uuid:
+          $ref: '#/components/schemas/uuid'
+      description: ''
+    V1.Transfer.StartTransferResponse:
+      type: object
+      required:
+        - message
+        - path
+      properties:
+        message:
+          type: string
+        path:
+          type: string
+      description: ''
+    V1.Transfer.Unapproved:
+      type: object
+      required:
+        - type
+        - directory
+        - uuid
+      properties:
+        type:
+          $ref: '#/components/schemas/TransferType'
+        directory:
+          type: string
+        uuid:
+          $ref: '#/components/schemas/uuid'
     V2Beta.Jobs.Job:
       type: object
       required:

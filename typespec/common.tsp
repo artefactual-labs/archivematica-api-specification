@@ -9,6 +9,14 @@ scalar exitCode extends uint8;
 @doc("E.g.: \"2020-01-17T00:44:37\".")
 scalar timestamp extends string;
 
+enum UnitStatus {
+    USER_INPUT,
+    FAILED,
+    REJECTED,
+    COMPLETE,
+    PROCESSING,
+}
+
 enum TransferType {
     Standard: "standard",
     ZipFile: "zipfile",
@@ -20,6 +28,15 @@ enum TransferType {
     Dataverse: "dataverse",
 }
 
+model ResultsResponse<T> is Response<200> {
+    results: T[];
+    message: string;
+}
+
+model OKResponse<Status = 200> is Response<Status> {
+    message: string;
+}
+
 @error
 model Error {
     error: boolean = true;
@@ -27,13 +44,13 @@ model Error {
 }
 
 @error
-model GenericError<Status> is Response<Status> {
+model ErrorResponse<Status> is Response<Status> {
     error: boolean = true;
     message: string;
 }
 
 @error
-model SuccessError<Status> is Response<Status> {
+model NonSuccessErrorResponse<Status> is Response<Status> {
     success: boolean = false;
     error: string;
 }
@@ -42,4 +59,13 @@ model Success {
     success: boolean = true;
 }
 
-alias SuccessResponse = Success | SuccessError<404>;
+alias SuccessResponse = Success | NonSuccessErrorResponse<404>;
+
+model Removed is Response<200> {
+    removed: boolean = true;
+}
+
+model NotRemoved {
+    @statusCode _: 409 | 500;
+    removed: boolean = false;
+}

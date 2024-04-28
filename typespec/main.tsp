@@ -31,44 +31,102 @@ namespace Service {
                 @header
                 contentType: "application/x-www-form-urlencoded",
 
+                @doc("Directory the transfer is in currently.")
                 directory: string,
+
+                @doc("Type of the transfer.")
                 type: TransferType,
-            ): {};
+            ): ApproveTransferResponse | ErrorResponse<500>;
+
+            model ApproveTransferResponse is OKResponse {
+                uuid: uuid;
+            }
 
             @doc("List unapproved transfers.")
             @route("/unapproved")
             @get
-            op listUnapproved(): {};
+            op listUnapproved(): ResultsResponse<Unapproved>;
+
+            model Unapproved {
+                type: TransferType;
+                directory: string;
+                uuid: uuid;
+            }
 
             @doc("List completed transfers.")
             @route("/completed")
             @get
-            op listCompleted(): {};
+            op listCompleted(): ResultsResponse<uuid>;
 
             @doc("Read the status of a transfer.")
             @route("/status/{id}")
             @get
-            op read(@path id: uuid): {};
+            op read(@path id: uuid): {} | ErrorResponse<400>;
+
+            model ReadResponse {
+                type: "transfer" | "SIP";
+                directory: string;
+                name: string;
+                uuid: uuid;
+                microservice: string;
+                status: UnitStatus;
+                sip_uuid?: uuid | "BACKLOG";
+            }
 
             @doc("Start a new transfer.")
             @route("/start_transfer")
             @post
-            op start(): {};
+            op start(
+                @header
+                contentType: "application/x-www-form-urlencoded",
+
+                @doc("Name of the transfer.")
+                name: string,
+
+                @doc("Type of the transfer.")
+                type: TransferType,
+
+                @doc("Accession number.")
+                accession: string,
+
+                @doc("Access system ID.")
+                access_id: string,
+
+                @doc("List of base64-encoded <location_uuid>:<relative_path> to be copied into the new transfer. Location UUIDs should be associated with this pipeline, and relative path should be relative to the location.")
+                paths: string[],
+
+                @doc("ID of the associated TransferMetadataSet for disk image ingest.")
+                row_ids: string[],
+            ): StartTransferResponse | ErrorResponse<500>;
+
+            model StartTransferResponse is OKResponse<200> {
+                path: string;
+            }
 
             @doc("Approve re-ingest of an AIP to the beginning of transfer.")
             @route("/reingest")
             @post
-            op reingest(): {};
+            op reingest(
+                @header
+                contentType: "application/x-www-form-urlencoded",
+
+                name: string,
+                uuid: uuid,
+            ): ReingestResponse | ErrorResponse<400 | 500>;
+
+            model ReingestResponse is OKResponse {
+                reingest_uuid: uuid;
+            }
 
             @doc("Mark all completed transfers as hidden.")
             @route("/delete")
             @delete
-            op delete(): {};
+            op deleteAll(): Removed | NotRemoved | Response<400>;
 
             @doc("Mark a transfer as hidden and hide in the dashboard.")
             @route("/{id}/delete")
             @post
-            op hide(@path id: uuid): {};
+            op delete(@path id: uuid): Removed | NotRemoved | Response<400>;
         }
 
         @route("/ingest")
@@ -76,12 +134,19 @@ namespace Service {
             @doc("List SIPs waiting for user input..")
             @route("/waiting")
             @get
-            op listWaiting(): {};
+            op listWaiting(): ResultsResponse<200>;
+
+            model Waiting {
+                sip_directory: string;
+                sip_uuid: uuid;
+                sip_name: string;
+                microservice: string;
+            }
 
             @doc("List completed SIPs.")
             @route("/completed")
             @get
-            op listCompleted(): {};
+            op listCompleted(): ResultsResponse<uuid>;
 
             @doc("Read the status of a SIP.")
             @route("/status/{id}")
@@ -91,12 +156,12 @@ namespace Service {
             @doc("Mark all completed SIPs as hidden.")
             @route("/delete")
             @delete
-            op delete(): {};
+            op deleteAll(): Removed | NotRemoved | Response<400>;
 
             @doc("Mark a SIP as hidden and hide in the dashboard.")
             @route("/{id}/delete")
             @post
-            op hide(@path id: uuid): {};
+            op delete(@path id: uuid): Removed | NotRemoved | Response<400>;
 
             @doc("Approve re-ingest of an AIP to the beginning of ingest.")
             @route("/reingest")
@@ -157,7 +222,7 @@ namespace Service {
             @route("/dips/atom/fetch_levels/")
             @get
             op fetchLevelsOfDescription(
-            ): LevelsOfDescriptionResponse | SuccessError<500>;
+            ): LevelsOfDescriptionResponse | NonSuccessErrorResponse<500>;
         }
 
         model LevelsOfDescriptionResponse is Response<200> {
@@ -191,8 +256,8 @@ namespace Service {
                 | {
                       @statusCode _: 415;
                   }
-                | SuccessError<404>
-                | SuccessError<500>;
+                | NonSuccessErrorResponse<404>
+                | NonSuccessErrorResponse<500>;
 
             @doc("Deletes the processing configuration with the given name.")
             @route("/{name}")
@@ -215,7 +280,7 @@ namespace Service {
             op create(@body request: CreatePackageRequest): {
                 @statusCode _: 201;
                 @body response: CreatePackageResponse;
-            } | GenericError<400>;
+            } | ErrorResponse<400>;
 
             model CreatePackageRequest {
                 name: string;
@@ -256,7 +321,7 @@ namespace Service {
             ): {
                 @statusCode _: 200;
                 @body response: ListJobsResponse;
-            } | GenericError<400>;
+            } | ErrorResponse<400>;
 
             alias ListJobsResponse = Job[];
 
@@ -292,7 +357,7 @@ namespace Service {
             op read(@path id: uuid): {
                 @statusCode _: 200;
                 @body response: Task;
-            } | GenericError<400>;
+            } | ErrorResponse<400>;
 
             model Task {
                 uuid: uuid;
