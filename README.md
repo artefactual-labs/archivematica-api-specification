@@ -12,6 +12,9 @@ Although the Archivematica API design may not always adhere to best practices,
 we hope this repository provides a detailed and transparent desription of these
 imperfections.
 
+The Archivematica Storage Service API specification is also available. Please
+visit this [link][ssclient-go].
+
 ## Usage
 
     npm --prefix=typespec run compile
@@ -28,3 +31,4 @@ Check out the results [here].
 
 [here]: https://editor.swagger.io/?url=https://raw.githubusercontent.com/artefactual-labs/archivematica-api-specification/main/typespec/tsp-output/%40typespec/openapi3/openapi.v1.yaml
 [TypeSpec.io]: https://typespec.io
+[ssclient-go]: https://github.com/artefactual-labs/ssclient-go/tree/main/typespec
