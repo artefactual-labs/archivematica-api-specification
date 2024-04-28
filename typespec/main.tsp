@@ -61,10 +61,10 @@ namespace Service {
             @doc("Read the status of a transfer.")
             @route("/status/{id}")
             @get
-            op read(@path id: uuid): {} | ErrorResponse<400>;
+            op read(@path id: uuid): ReadResponse | ErrorResponse<400>;
 
-            model ReadResponse {
-                type: "transfer" | "SIP";
+            model ReadResponse is Response<200> {
+                type: "transfer";
                 directory: string;
                 name: string;
                 uuid: uuid;
@@ -151,7 +151,17 @@ namespace Service {
             @doc("Read the status of a SIP.")
             @route("/status/{id}")
             @get
-            op read(@path id: uuid): {};
+            op read(@path id: uuid): ReadResponse | ErrorResponse<400>;
+
+            model ReadResponse is Response<200> {
+                type: "SIP";
+                directory: string;
+                name: string;
+                uuid: uuid;
+                microservice: string;
+                status: UnitStatus;
+                sip_uuid?: uuid | "BACKLOG";
+            }
 
             @doc("Mark all completed SIPs as hidden.")
             @route("/delete")
@@ -166,17 +176,38 @@ namespace Service {
             @doc("Approve re-ingest of an AIP to the beginning of ingest.")
             @route("/reingest")
             @post
-            op reingest(): {};
+            op reingest(
+                @header
+                contentType: "application/x-www-form-urlencoded",
+
+                name: string,
+                uuid: uuid,
+            ): ReingestResponse | ErrorResponse<400 | 500>;
+
+            model ReingestResponse is OKResponse {
+                reingest_uuid: uuid;
+            }
 
             @doc("Approve an AIP partial re-ingest.")
             @route("/reingest/approve")
             @post
-            op approveReingest(): {};
+            op approveReingest(
+                @header
+                contentType: "application/x-www-form-urlencoded",
+
+                uuid: uuid,
+            ): OKResponse | ErrorResponse<400>;
 
             @doc("Add metadata files to a SIP.")
             @route("/copy_metadata_files")
             @post
-            op copyMetadataFiles(): {};
+            op copyMetadataFiles(
+                @header
+                contentType: "application/x-www-form-urlencoded",
+
+                sip_uuid: uuid,
+                paths: string[],
+            ): OKResponse | ErrorResponse<400 | 500>;
         }
 
         @route("/filesystem")

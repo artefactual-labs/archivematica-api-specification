@@ -1,5 +1,17 @@
 # archivematica-api-specification
 
+Welcome to the repository for the Archivematica API specification. This
+documentation describes our API using [TypeSpec.io], which we then use to
+generate the OpenAPI v3 specification.
+
+From the OpenAPI specification, it is possible to create clients, servers or
+documentation in multiple languages thanks to extensive support from the
+community.
+
+Although the Archivematica API design may not always adhere to best practices,
+we hope this repository provides a detailed and transparent desription of these
+imperfections.
+
 ## Usage
 
     npm --prefix=typespec run compile
@@ -11,7 +23,8 @@ Check out the results [here].
 ## Resources
 
 - [Current documentation](https://www.archivematica.org/en/docs/latest/dev-manual/api/api-reference-archivematica/) - somewhat accurate.
-- [Legacy documentattion](https://wiki.archivematica.org/Archivematica_API) - abandoned, updated.
+- [Legacy documentattion](https://wiki.archivematica.org/Archivematica_API) - abandoned, ouupdated.
 - [Dashboard API Django app](https://github.com/artefactual/archivematica/tree/qa/1.x/src/dashboard/src/components/api) - the real thing!
 
 [here]: https://editor.swagger.io/?url=https://raw.githubusercontent.com/artefactual-labs/archivematica-api-specification/main/typespec/tsp-output/%40typespec/openapi3/openapi.v1.yaml
+[TypeSpec.io]: https://typespec.io

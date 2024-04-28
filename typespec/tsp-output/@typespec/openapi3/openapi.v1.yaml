@@ -138,6 +138,63 @@ paths:
             application/json:
               schema:
                 type: object
+                required:
+                  - message
+                properties:
+                  error:
+                    type: boolean
+                    default: false
+                  message:
+                    type: string
+                description: ''
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - error
+                  - message
+                properties:
+                  error:
+                    type: boolean
+                    default: true
+                  message:
+                    type: string
+                description: ''
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - error
+                  - message
+                properties:
+                  error:
+                    type: boolean
+                    default: true
+                  message:
+                    type: string
+                description: ''
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                sip_uuid:
+                  $ref: '#/components/schemas/uuid'
+                paths:
+                  type: array
+                  items:
+                    type: string
+              required:
+                - sip_uuid
+                - paths
   /api/ingest/delete:
     delete:
       operationId: Ingest_deleteAll
@@ -175,7 +232,53 @@ paths:
           content:
             application/json:
               schema:
+                $ref: '#/components/schemas/V1.Ingest.ReingestResponse'
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
                 type: object
+                required:
+                  - error
+                  - message
+                properties:
+                  error:
+                    type: boolean
+                    default: true
+                  message:
+                    type: string
+                description: ''
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - error
+                  - message
+                properties:
+                  error:
+                    type: boolean
+                    default: true
+                  message:
+                    type: string
+                description: ''
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                uuid:
+                  $ref: '#/components/schemas/uuid'
+              required:
+                - name
+                - uuid
   /api/ingest/reingest/approve:
     post:
       operationId: Ingest_approveReingest
@@ -188,6 +291,42 @@ paths:
             application/json:
               schema:
                 type: object
+                required:
+                  - message
+                properties:
+                  error:
+                    type: boolean
+                    default: false
+                  message:
+                    type: string
+                description: ''
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - error
+                  - message
+                properties:
+                  error:
+                    type: boolean
+                    default: true
+                  message:
+                    type: string
+                description: ''
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                uuid:
+                  $ref: '#/components/schemas/uuid'
+              required:
+                - uuid
   /api/ingest/status/{id}:
     get:
       operationId: Ingest_read
@@ -204,7 +343,23 @@ paths:
           content:
             application/json:
               schema:
+                $ref: '#/components/schemas/V1.Ingest.ReadResponse'
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
                 type: object
+                required:
+                  - error
+                  - message
+                properties:
+                  error:
+                    type: boolean
+                    default: true
+                  message:
+                    type: string
+                description: ''
   /api/ingest/waiting:
     get:
       operationId: Ingest_listWaiting
@@ -600,7 +755,7 @@ paths:
           content:
             application/json:
               schema:
-                type: object
+                $ref: '#/components/schemas/V1.Transfer.ReadResponse'
         '400':
           description: The server could not understand the request due to invalid syntax.
           content:
@@ -888,6 +1043,51 @@ components:
         - REJECTED
         - COMPLETE
         - PROCESSING
+    V1.Ingest.ReadResponse:
+      type: object
+      required:
+        - type
+        - directory
+        - name
+        - uuid
+        - microservice
+        - status
+      properties:
+        type:
+          type: string
+          enum:
+            - SIP
+        directory:
+          type: string
+        name:
+          type: string
+        uuid:
+          $ref: '#/components/schemas/uuid'
+        microservice:
+          type: string
+        status:
+          $ref: '#/components/schemas/UnitStatus'
+        sip_uuid:
+          anyOf:
+            - $ref: '#/components/schemas/uuid'
+            - type: string
+              enum:
+                - BACKLOG
+      description: ''
+    V1.Ingest.ReingestResponse:
+      type: object
+      required:
+        - message
+        - reingest_uuid
+      properties:
+        error:
+          type: boolean
+          default: false
+        message:
+          type: string
+        reingest_uuid:
+          $ref: '#/components/schemas/uuid'
+      description: ''
     V1.Ingest.Waiting:
       type: object
       required:
@@ -910,6 +1110,9 @@ components:
         - message
         - uuid
       properties:
+        error:
+          type: boolean
+          default: false
         message:
           type: string
         uuid:
@@ -929,7 +1132,6 @@ components:
           type: string
           enum:
             - transfer
-            - SIP
         directory:
           type: string
         name:
@@ -946,12 +1148,16 @@ components:
             - type: string
               enum:
                 - BACKLOG
+      description: ''
     V1.Transfer.ReingestResponse:
       type: object
       required:
         - message
         - reingest_uuid
       properties:
+        error:
+          type: boolean
+          default: false
         message:
           type: string
         reingest_uuid:
@@ -963,6 +1169,9 @@ components:
         - message
         - path
       properties:
+        error:
+          type: boolean
+          default: false
         message:
           type: string
         path:

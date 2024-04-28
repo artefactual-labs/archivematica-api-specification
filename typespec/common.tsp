@@ -34,6 +34,7 @@ model ResultsResponse<T> is Response<200> {
 }
 
 model OKResponse<Status = 200> is Response<Status> {
+    error?: boolean = false;
     message: string;
 }
 
