@@ -31,7 +31,7 @@ jobs:
           generator: dynamic-html
           generator-tag: v7.5.0
           config-file: openapi-generator/dynamic-html/config.json
-          openapi-file: typespec/tsp-output/@typespec/openapi3/openapi.yaml
+          openapi-file: typespec/tsp-output/@typespec/openapi3/openapi.v1.yaml
       - name: Upload artifacts
         uses: actions/upload-pages-artifact@v3
         with:

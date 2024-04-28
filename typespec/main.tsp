@@ -1,18 +1,25 @@
 import "@typespec/http";
 import "@typespec/rest";
 import "@typespec/openapi3";
+import "@typespec/versioning";
 
 import "./common.tsp";
 
 using TypeSpec.Http;
 using TypeSpec.Rest;
+using TypeSpec.Versioning;
 
 @service({
     title: "Archivematica",
 })
 @route("/api")
 @useAuth(ApiKeyAuth<ApiKeyLocation.header, "ApiKey">)
+@versioned(Versions)
 namespace Service {
+    enum Versions {
+        v1,
+    }
+
     @route("/")
     namespace V1 {
         @route("/transfer")

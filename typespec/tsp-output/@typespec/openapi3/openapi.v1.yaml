@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: Archivematica
-  version: 0.0.0
+  version: v1
 tags: []
 paths:
   /api/administration/dips/atom/fetch_levels:
@@ -751,6 +751,10 @@ components:
       enum:
         - avalon
         - rights
+    Versions:
+      type: string
+      enum:
+        - v1
     exitCode:
       type: integer
       format: uint8

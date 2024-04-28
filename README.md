@@ -14,4 +14,4 @@ Check out the results [here].
 - [Legacy documentattion](https://wiki.archivematica.org/Archivematica_API) - abandoned, updated.
 - [Dashboard API Django app](https://github.com/artefactual/archivematica/tree/qa/1.x/src/dashboard/src/components/api) - the real thing!
 
-[here]: https://editor.swagger.io/?url=https://raw.githubusercontent.com/artefactual-labs/archivematica-api-specification/main/typespec/tsp-output/%40typespec/openapi3/openapi.yaml
+[here]: https://editor.swagger.io/?url=https://raw.githubusercontent.com/artefactual-labs/archivematica-api-specification/main/typespec/tsp-output/%40typespec/openapi3/openapi.v1.yaml
