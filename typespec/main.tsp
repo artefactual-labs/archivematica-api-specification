@@ -17,12 +17,94 @@ namespace Service {
     namespace V1 {
         @route("/transfer")
         namespace Transfer {
+            @doc("Approve a transfer.")
+            @route("/approve")
+            @post
+            op approve(
+                @header
+                contentType: "application/x-www-form-urlencoded",
 
+                directory: string,
+                type: TransferType,
+            ): {};
+
+            @doc("List unapproved transfers.")
+            @route("/unapproved")
+            @get
+            op listUnapproved(): {};
+
+            @doc("List completed transfers.")
+            @route("/completed")
+            @get
+            op listCompleted(): {};
+
+            @doc("Read the status of a transfer.")
+            @route("/status/{id}")
+            @get
+            op read(@path id: uuid): {};
+
+            @doc("Start a new transfer.")
+            @route("/start_transfer")
+            @post
+            op start(): {};
+
+            @doc("Approve re-ingest of an AIP to the beginning of transfer.")
+            @route("/reingest")
+            @post
+            op reingest(): {};
+
+            @doc("Mark all completed transfers as hidden.")
+            @route("/delete")
+            @delete
+            op delete(): {};
+
+            @doc("Mark a transfer as hidden and hide in the dashboard.")
+            @route("/{id}/delete")
+            @post
+            op hide(@path id: uuid): {};
         }
 
         @route("/ingest")
         namespace Ingest {
+            @doc("List SIPs waiting for user input..")
+            @route("/waiting")
+            @get
+            op listWaiting(): {};
 
+            @doc("List completed SIPs.")
+            @route("/completed")
+            @get
+            op listCompleted(): {};
+
+            @doc("Read the status of a SIP.")
+            @route("/status/{id}")
+            @get
+            op read(@path id: uuid): {};
+
+            @doc("Mark all completed SIPs as hidden.")
+            @route("/delete")
+            @delete
+            op delete(): {};
+
+            @doc("Mark a SIP as hidden and hide in the dashboard.")
+            @route("/{id}/delete")
+            @post
+            op hide(@path id: uuid): {};
+
+            @doc("Approve re-ingest of an AIP to the beginning of ingest.")
+            @route("/reingest")
+            @post
+            op reingest(): {};
+
+            @doc("Approve an AIP partial re-ingest.")
+            @route("/reingest/approve")
+            @post
+            op approveReingest(): {};
+
+            @doc("Add metadata files to a SIP.")
+            @route("/copy_metadata_files")
+            @post
+            op copyMetadataFiles(): {};
         }
 
         @route("/filesystem")
@@ -136,17 +218,6 @@ namespace Service {
                 auto_approve?: boolean;
                 processing_config?: string;
                 type?: TransferType;
-            }
-
-            enum TransferType {
-                Standard: "standard",
-                ZipFile: "zipfile",
-                UnzippedBag: "unzipped bag",
-                ZippedBag: "zipped bag",
-                DSpace: "dspace",
-                Maildir: "maildir",
-                TRIM: "TRIM",
-                Dataverse: "dataverse",
             }
 
             model CreatePackageResponse {

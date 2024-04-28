@@ -103,6 +103,112 @@ paths:
               required:
                 - path
                 - level_of_description
+  /api/ingest/completed:
+    get:
+      operationId: Ingest_listCompleted
+      description: List completed SIPs.
+      parameters: []
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: object
+  /api/ingest/copy_metadata_files:
+    post:
+      operationId: Ingest_copyMetadataFiles
+      description: Add metadata files to a SIP.
+      parameters: []
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: object
+  /api/ingest/delete:
+    delete:
+      operationId: Ingest_delete
+      description: Mark all completed SIPs as hidden.
+      parameters: []
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: object
+  /api/ingest/reingest:
+    post:
+      operationId: Ingest_reingest
+      description: Approve re-ingest of an AIP to the beginning of ingest.
+      parameters: []
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: object
+  /api/ingest/reingest/approve:
+    post:
+      operationId: Ingest_approveReingest
+      description: Approve an AIP partial re-ingest.
+      parameters: []
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: object
+  /api/ingest/status/{id}:
+    get:
+      operationId: Ingest_read
+      description: Read the status of a SIP.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: object
+  /api/ingest/waiting:
+    get:
+      operationId: Ingest_listWaiting
+      description: List SIPs waiting for user input..
+      parameters: []
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: object
+  /api/ingest/{id}/delete:
+    post:
+      operationId: Ingest_hide
+      description: Mark a SIP as hidden and hide in the dashboard.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: object
   /api/processing-configuration:
     get:
       operationId: ProcessingConfiguration_list
@@ -209,6 +315,126 @@ paths:
                   error:
                     type: string
                 description: ''
+  /api/transfer/approve:
+    post:
+      operationId: Transfer_approve
+      description: Approve a transfer.
+      parameters: []
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: object
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                directory:
+                  type: string
+                type:
+                  $ref: '#/components/schemas/TransferType'
+              required:
+                - directory
+                - type
+  /api/transfer/completed:
+    get:
+      operationId: Transfer_listCompleted
+      description: List completed transfers.
+      parameters: []
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: object
+  /api/transfer/delete:
+    delete:
+      operationId: Transfer_delete
+      description: Mark all completed transfers as hidden.
+      parameters: []
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: object
+  /api/transfer/reingest:
+    post:
+      operationId: Transfer_reingest
+      description: Approve re-ingest of an AIP to the beginning of transfer.
+      parameters: []
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: object
+  /api/transfer/start_transfer:
+    post:
+      operationId: Transfer_start
+      description: Start a new transfer.
+      parameters: []
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: object
+  /api/transfer/status/{id}:
+    get:
+      operationId: Transfer_read
+      description: Read the status of a transfer.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: object
+  /api/transfer/unapproved:
+    get:
+      operationId: Transfer_listUnapproved
+      description: List unapproved transfers.
+      parameters: []
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: object
+  /api/transfer/{id}/delete:
+    post:
+      operationId: Transfer_hide
+      description: Mark a transfer as hidden and hide in the dashboard.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: object
   /api/v2beta/jobs/{id}:
     get:
       operationId: Jobs_list
@@ -390,6 +616,17 @@ components:
         success:
           type: boolean
           default: true
+    TransferType:
+      type: string
+      enum:
+        - standard
+        - zipfile
+        - unzipped bag
+        - zipped bag
+        - dspace
+        - maildir
+        - TRIM
+        - dataverse
     V2Beta.Jobs.Job:
       type: object
       required:
@@ -451,7 +688,7 @@ components:
         processing_config:
           type: string
         type:
-          $ref: '#/components/schemas/V2Beta.Packages.TransferType'
+          $ref: '#/components/schemas/TransferType'
     V2Beta.Packages.CreatePackageResponse:
       type: object
       required:
@@ -459,17 +696,6 @@ components:
       properties:
         id:
           $ref: '#/components/schemas/uuid'
-    V2Beta.Packages.TransferType:
-      type: string
-      enum:
-        - standard
-        - zipfile
-        - unzipped bag
-        - zipped bag
-        - dspace
-        - maildir
-        - TRIM
-        - dataverse
     V2Beta.Tasks.Task:
       type: object
       required:

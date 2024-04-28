@@ -9,6 +9,17 @@ scalar exitCode extends uint8;
 @doc("E.g.: \"2020-01-17T00:44:37\".")
 scalar timestamp extends string;
 
+enum TransferType {
+    Standard: "standard",
+    ZipFile: "zipfile",
+    UnzippedBag: "unzipped bag",
+    ZippedBag: "zipped bag",
+    DSpace: "dspace",
+    Maildir: "maildir",
+    TRIM: "TRIM",
+    Dataverse: "dataverse",
+}
+
 @error
 model Error {
     error: boolean = true;
