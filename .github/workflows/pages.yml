@@ -19,23 +19,22 @@ defaults:
     shell: bash
 
 jobs:
-
   build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Generate site
-        uses: openapi-generators/openapitools-generator-action@v1
-        with:
-          generator: dynamic-html
-          generator-tag: v7.5.0
-          config-file: openapi-generator/dynamic-html/config.json
-          openapi-file: typespec/tsp-output/@typespec/openapi3/openapi.v1.yaml
+      - name: Generate docs
+        run: |
+          npx --yes @redocly/cli@v1.12.2 \
+            build-docs \
+            typespec/tsp-output/@typespec/openapi3/openapi.v1.yaml \
+            --title="Archivematica API" \
+            --output=site/index.html
       - name: Upload artifacts
         uses: actions/upload-pages-artifact@v3
         with:
-          path: ./dynamic-html-client/docs
+          path: ./site
 
   deploy:
     environment:
