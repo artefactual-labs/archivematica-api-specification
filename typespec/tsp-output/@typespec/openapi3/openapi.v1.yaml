@@ -855,6 +855,12 @@ paths:
           description: Name of the job.
           schema:
             type: string
+        - name: detailed
+          in: query
+          required: false
+          description: Include the task properties provided by the task endpoint.
+          schema:
+            type: boolean
       responses:
         '200':
           description: The request has succeeded.

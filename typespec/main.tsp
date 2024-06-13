@@ -349,6 +349,10 @@ namespace Service {
                 @doc("Name of the job.")
                 @query
                 name?: string,
+
+                @doc("Include the task properties provided by the task endpoint.")
+                @query
+                detailed?: boolean,
             ): {
                 @statusCode _: 200;
                 @body response: ListJobsResponse;
