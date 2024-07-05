@@ -402,7 +402,8 @@ namespace Service {
                 time_created: timestamp;
                 time_started?: timestamp;
                 time_ended?: timestamp;
-                duration?: DurationKnownEncoding.seconds;
+                // TODO: https://github.com/artefactual/archivematica/blob/c757adeec61bfdb7dfd530a7db9821af4b2af55e/src/dashboard/src/components/helpers.py#L162-L169
+                duration: DurationKnownEncoding.seconds;
             }
         }
 

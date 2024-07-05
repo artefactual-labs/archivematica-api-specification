@@ -1273,6 +1273,7 @@ components:
         - file_uuid
         - exit_code
         - time_created
+        - duration
       properties:
         uuid:
           $ref: '#/components/schemas/uuid'
