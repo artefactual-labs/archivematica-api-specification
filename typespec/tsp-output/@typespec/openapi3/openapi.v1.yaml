@@ -1290,9 +1290,14 @@ components:
         time_ended:
           $ref: '#/components/schemas/timestamp'
         duration:
-          type: string
-          enum:
-            - seconds
+          anyOf:
+            - type: string
+              enum:
+                - < 1
+                - ''
+            - type: integer
+              format: int64
+          description: Task duration in seconds (integer). If the duration is less than a second, this will be a "< 1" string.
     V2Beta.Validate.InvalidDocumentResponse:
       type: object
       required:
