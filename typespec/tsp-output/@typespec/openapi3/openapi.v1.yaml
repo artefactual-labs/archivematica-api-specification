@@ -1270,31 +1270,28 @@ components:
       required:
         - uuid
         - file_name
+        - file_uuid
         - exit_code
         - time_created
-        - time_ended
-        - file_uuid
-        - duration
-        - time_started
       properties:
         uuid:
           $ref: '#/components/schemas/uuid'
         file_name:
           type: string
+        file_uuid:
+          $ref: '#/components/schemas/uuid'
         exit_code:
           $ref: '#/components/schemas/exitCode'
         time_created:
           $ref: '#/components/schemas/timestamp'
+        time_started:
+          $ref: '#/components/schemas/timestamp'
         time_ended:
           $ref: '#/components/schemas/timestamp'
-        file_uuid:
-          $ref: '#/components/schemas/uuid'
         duration:
           type: string
           enum:
             - seconds
-        time_started:
-          $ref: '#/components/schemas/timestamp'
     V2Beta.Validate.InvalidDocumentResponse:
       type: object
       required:

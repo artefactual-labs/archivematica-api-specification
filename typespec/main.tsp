@@ -397,12 +397,12 @@ namespace Service {
             model Task {
                 uuid: uuid;
                 file_name: string;
+                file_uuid: uuid;
                 exit_code: exitCode;
                 time_created: timestamp;
-                time_ended: timestamp;
-                file_uuid: uuid;
-                duration: DurationKnownEncoding.seconds;
-                time_started: timestamp;
+                time_started?: timestamp;
+                time_ended?: timestamp;
+                duration?: DurationKnownEncoding.seconds;
             }
         }
 
