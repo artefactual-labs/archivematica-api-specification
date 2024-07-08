@@ -430,7 +430,7 @@ namespace Service {
             } | {
                 @statusCode _: 400;
                 @body response: InvalidDocumentResponse | Error;
-            };
+            } | ErrorResponse<404>;
 
             enum Validator {
                 AvalonMediaSystemCSVManifest: "avalon",

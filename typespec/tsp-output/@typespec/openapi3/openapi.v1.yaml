@@ -981,6 +981,22 @@ paths:
                 anyOf:
                   - $ref: '#/components/schemas/V2Beta.Validate.InvalidDocumentResponse'
                   - $ref: '#/components/schemas/Error'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - error
+                  - message
+                properties:
+                  error:
+                    type: boolean
+                    default: true
+                  message:
+                    type: string
+                description: ''
       requestBody:
         required: true
         content:
