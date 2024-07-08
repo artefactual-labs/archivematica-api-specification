@@ -1334,7 +1334,10 @@ components:
       description: 'E.g.: "2020-01-17T00:44:37".'
     uuid:
       type: string
-      format: 'UUIDv4, e.g.: "e3bae040-7682-4457-aef8-20a419aed0bd".'
+      format: uuid
+      x-go-type-import:
+        path: github.com/google/uuid
+      x-go-type: uuid.UUID
   securitySchemes:
     ApiKeyAuth:
       type: apiKey

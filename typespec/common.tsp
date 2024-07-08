@@ -1,6 +1,14 @@
+using TypeSpec.OpenAPI;
 using TypeSpec.Http;
 
-@format("UUIDv4, e.g.: \"e3bae040-7682-4457-aef8-20a419aed0bd\".")
+@format("uuid")
+@extension("x-go-type", "uuid.UUID")
+@extension(
+    "x-go-type-import",
+    {
+        path: "github.com/google/uuid",
+    }
+)
 scalar uuid extends string;
 
 @doc("POSIX-compatible exit code: 0 for success and any number from 1 to 255 for anything else.")
