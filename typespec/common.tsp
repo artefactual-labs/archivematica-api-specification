@@ -17,6 +17,14 @@ scalar exitCode extends uint8;
 @doc("E.g.: \"2020-01-17T00:44:37\".")
 scalar timestamp extends string;
 
+alias TaskDuration = DurationString | int64;
+
+@extension("x-enum-varnames", ["Empty", "LowerThanOne"]) // Used to solve name clash in oapi-codegen.
+enum DurationString {
+    Empty: "";
+    LowerThanOne: "< 1";
+}
+
 enum UnitStatus {
     USER_INPUT,
     FAILED,

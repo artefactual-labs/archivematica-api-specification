@@ -6,6 +6,7 @@ import "@typespec/versioning";
 
 import "./common.tsp";
 
+using TypeSpec.OpenAPI;
 using TypeSpec.Http;
 using TypeSpec.Versioning;
 
@@ -404,10 +405,8 @@ namespace Service {
                 time_ended?: timestamp;
 
                 @doc("Task duration in seconds (integer). If the duration is less than a second, this will be a \"< 1\" string.")
-                duration: "< 1" | "" | int64;
+                duration: TaskDuration;
             }
-
-
         }
 
         @route("/validate")

@@ -992,6 +992,14 @@ security:
   - ApiKeyAuth: []
 components:
   schemas:
+    DurationString:
+      type: string
+      enum:
+        - ''
+        - < 1
+      x-enum-varnames:
+        - Empty
+        - LowerThanOne
     Error:
       type: object
       required:
@@ -1289,10 +1297,7 @@ components:
           $ref: '#/components/schemas/timestamp'
         duration:
           anyOf:
-            - type: string
-              enum:
-                - < 1
-                - ''
+            - $ref: '#/components/schemas/DurationString'
             - type: integer
               format: int64
           description: Task duration in seconds (integer). If the duration is less than a second, this will be a "< 1" string.
