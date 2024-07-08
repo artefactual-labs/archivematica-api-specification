@@ -379,9 +379,7 @@ paths:
                   results:
                     type: array
                     items:
-                      type: number
-                      enum:
-                        - 200
+                      $ref: '#/components/schemas/V1.Ingest.Waiting'
                   message:
                     type: string
                 description: ''

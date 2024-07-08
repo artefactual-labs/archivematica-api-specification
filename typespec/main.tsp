@@ -134,7 +134,7 @@ namespace Service {
             @doc("List SIPs waiting for user input..")
             @route("/waiting")
             @get
-            op listWaiting(): ResultsResponse<200>;
+            op listWaiting(): ResultsResponse<Waiting>;
 
             model Waiting {
                 sip_directory: string;
