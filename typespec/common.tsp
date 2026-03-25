@@ -5,7 +5,7 @@ using TypeSpec.Http;
 @extension("x-go-type", "uuid.UUID")
 @extension(
     "x-go-type-import",
-    {
+    #{
         path: "github.com/google/uuid",
     }
 )
@@ -19,7 +19,7 @@ scalar timestamp extends string;
 
 alias TaskDuration = DurationString | int64;
 
-@extension("x-enum-varnames", ["Empty", "LowerThanOne"]) // Used to solve name clash in oapi-codegen.
+@extension("x-enum-varnames", #["Empty", "LowerThanOne"]) // Used to solve name clash in oapi-codegen.
 enum DurationString {
     Empty: "";
     LowerThanOne: "< 1";

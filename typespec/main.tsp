@@ -10,7 +10,7 @@ using TypeSpec.OpenAPI;
 using TypeSpec.Http;
 using TypeSpec.Versioning;
 
-@service({
+@service(#{
     title: "Archivematica",
 })
 @route("/api")

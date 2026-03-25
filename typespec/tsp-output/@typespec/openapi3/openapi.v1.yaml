@@ -4,7 +4,7 @@ info:
   version: v1
 tags: []
 paths:
-  /api/administration/dips/atom/fetch_levels:
+  /api/administration/dips/atom/fetch_levels/:
     get:
       operationId: Administration_fetchLevelsOfDescription
       description: Fetches all levels of description from an AtoM datatabase, replacing any previously existing.
@@ -36,7 +36,7 @@ paths:
                   error:
                     type: string
                 description: ''
-  /api/filesystem/administration/dips/atom/levels:
+  /api/filesystem/administration/dips/atom/levels/:
     get:
       operationId: Filesystem_listLevelsOfDescription
       description: List all levels of description configured.
@@ -62,6 +62,7 @@ paths:
           required: true
           schema:
             type: string
+          explode: false
       responses:
         '200':
           description: The request has succeeded.
@@ -841,24 +842,28 @@ paths:
           description: Name of the microservice the jobs belong to.
           schema:
             type: string
+          explode: false
         - name: link_uuid
           in: query
           required: true
           description: UUID of the job chain link.
           schema:
             $ref: '#/components/schemas/uuid'
+          explode: false
         - name: name
           in: query
           required: false
           description: Name of the job.
           schema:
             type: string
+          explode: false
         - name: detailed
           in: query
           required: false
           description: Include the task properties provided by the task endpoint.
           schema:
             type: boolean
+          explode: false
       responses:
         '200':
           description: The request has succeeded.
