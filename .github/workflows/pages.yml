@@ -24,9 +24,11 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+      - name: Install TypeSpec dependencies
+        run: npm ci --prefix typespec
       - name: Generate docs
         run: |
-          npx --yes @redocly/cli@v1.12.2 \
+          npx --prefix typespec redocly \
             build-docs \
             typespec/tsp-output/@typespec/openapi3/openapi.v1.yaml \
             --title="Archivematica API" \

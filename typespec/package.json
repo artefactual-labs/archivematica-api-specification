@@ -9,6 +9,7 @@
     "watch": "npm run _tsp -- compile . --watch"
   },
   "dependencies": {
+    "@redocly/cli": "^1.12.2",
     "@typespec/compiler": "^1.10.0",
     "@typespec/http": "^1.10.0",
     "@typespec/openapi3": "^1.10.0",
